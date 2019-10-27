@@ -1,0 +1,55 @@
+{
+	"definitions": {
+		"animation_entry": {
+			"$id": "#animation_entry",
+			"type": "object",
+			"properties": {
+				"id": { "type": "string" },
+				"after": { "type": "string" },
+				"classes": {
+					"type": "array",
+					"items": {
+						"type": "string",
+						"minItems": 1,
+						"uniqueItems": true
+					}
+				},
+				"details": {
+					"type": "object",
+					"properties": {
+						"delay": { "type": "string" },
+						"duration": { "type": "string" },
+						"timing": { "type": "string" },
+						"origin": { "type": "string" }
+					},
+					"additionalProperties": false,
+					"required": []
+				}
+			},
+			"required": ["classes"]
+		},
+		"stage_entry": {
+			"$id": "#stage_entry",
+			"type": "object",
+			"properties": {
+				"id": {
+					"type": "integer",
+					"minimum": 0
+				},
+				"animations": {
+					"type": "array",
+					"items": {
+						"$ref": "#animation_entry",
+						"minItems": 1
+					}
+				},
+				"required": ["id", "animations"]
+			}
+		}
+	},
+	
+	"type": "array",
+	"items": {
+		"$ref": "#stage_entry"
+	}
+}
