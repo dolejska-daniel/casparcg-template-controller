@@ -1,4 +1,9 @@
 module Template {
+    /**
+     * Template controller.
+     *
+     * Provides simple template control interface.
+     */
     export class Controller {
         get debug(): boolean {
             return this._debug;
@@ -17,7 +22,7 @@ module Template {
         private static _instance: Template.Controller;
 
         /**
-         * @param debug Is page in debug mode?
+         * @param debug Is template in debug mode?
          * @constructor
          */
         constructor(debug: boolean = false) {
@@ -44,13 +49,26 @@ module Template {
             }
         }
 
+        /**
+         * Get existing or create new template controller instance.
+         *
+         * @param debug Is template in debug mode?
+         */
         public static GetInstance(debug?: boolean): Controller {
             if (Controller._instance)
+            {
+                Controller._instance.SetDebug(debug);
                 return Controller._instance;
+            }
 
             return new Controller(debug);
         }
 
+        /**
+         * Sets debug status for current template.
+         *
+         * @param debug Is template in debug mode?
+         */
         public SetDebug(debug?: boolean): void {
             this._debug = debug;
             if (debug) {
@@ -61,7 +79,7 @@ module Template {
         }
 
         //=====================================================================dd==
-        //
+        //  TEMPLATE CONTROLS
         //=====================================================================dd==
 
         /**
@@ -79,7 +97,8 @@ module Template {
         }
 
         /**
-         *
+         * Clears all previously registered dependencies and pre-processes
+         * animations in current stage.
          */
         private PreparePlay(): void {
             // remove existing dependencies from before
@@ -92,21 +111,33 @@ module Template {
             }
         }
 
+        /**
+         * Selects next stage identifier as current and starts playing
+         * animations defined within that stage.
+         */
         public Next(): void {
             this._stage_id++;
             this.Play();
         }
 
+        /**
+         * Updates values of template variables.
+         *
+         * @param data Object containing current values for template variables.
+         */
         public Update(data: object): void {
-
+            // TODO: Implement template variable system
         }
 
+        /**
+         * Hides all existing contents of current template.
+         */
         public Stop(): void {
-
+            // TODO: Implement a way to hide template contents
         }
 
         //=====================================================================dd==
-        //
+        //  ANIMATION DEPENDENCY CONTROLS
         //=====================================================================dd==
 
         /**
