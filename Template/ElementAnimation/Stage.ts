@@ -1,7 +1,7 @@
 module Template.ElementAnimation {
     export class Stage {
         get template(): Template.Controller {
-            return this._controller.template;
+            return Template.Controller.GetInstance();
         }
 
         get id(): number {

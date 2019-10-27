@@ -1,10 +1,10 @@
 
 module Template.ElementAnimation {
     export class Animation {
-        readonly id?: string;
-        readonly after?: string;
-        readonly classes: string[];
-        readonly details: ElementAnimation.Details;
+        public readonly id?: string;
+        public readonly after?: string;
+        public readonly classes: string[];
+        public readonly details: ElementAnimation.Details;
 
         private readonly _controller: ElementAnimation.Controller;
 

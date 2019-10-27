@@ -1,25 +1,14 @@
 module Template.ElementAnimation {
     export class Controller {
-        get element(): HTMLElement {
-            return this._element;
-        }
-
-        get template(): Template.Controller {
-            return this._template;
-        }
-
         private _element: HTMLElement;
 
         private readonly _originalElement: HTMLElement;
         private readonly _stages: ElementAnimation.Stage[];
-        private readonly _template: Template.Controller;
 
         /**
-         * @param template
          * @param element Target element of the animation.
          */
-        constructor(template: Template.Controller, element: HTMLElement) {
-            this._template = template;
+        constructor(element: HTMLElement) {
             this._element = element;
             this._originalElement = element;
 
@@ -36,9 +25,14 @@ module Template.ElementAnimation {
         }
 
         //=====================================================================dd==
-        //
+        //  ANIMATION CONTROLS
         //=====================================================================dd==
 
+        /**
+         * Plays existing animations within current stage.
+         *
+         * @param stage_id Current stage identifier.
+         */
         public Play(stage_id: number): void {
             if (this._stages.hasOwnProperty(stage_id)) {
                 // play animations in specified stage
@@ -46,6 +40,11 @@ module Template.ElementAnimation {
             }
         }
 
+        /**
+         * Prepares currently active animation stage.
+         *
+         * @param stage_id Current stage identifier.
+         */
         public PreparePlay(stage_id: number): void {
             if (this._stages.hasOwnProperty(stage_id)) {
                 // prepare animations in specified stage
@@ -54,13 +53,22 @@ module Template.ElementAnimation {
         }
 
         //=====================================================================dd==
-        //
+        //  TARGET ELEMENT CONTROLS
         //=====================================================================dd==
 
+        /**
+         * Duplicates original animation target element.
+         */
         public DuplicateElement(): HTMLElement {
             return <HTMLElement>this._originalElement.cloneNode(true);
         }
 
+        /**
+         * Replaces existing target element with its duplicate which triggers
+         * applied animation.
+         *
+         * @param new_element Element to be inserted into current template.
+         */
         public ReplaceElement(new_element: HTMLElement) {
             this._element.parentElement.replaceChild(new_element, this._element);
             this._element = new_element;

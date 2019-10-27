@@ -44,7 +44,7 @@ module Template {
                     continue;
 
                 let element = animated_elements[element_id];
-                let controller = new ElementAnimation.Controller(this, element);
+                let controller = new ElementAnimation.Controller(element);
                 this._controllers.push(controller);
             }
         }
@@ -72,9 +72,9 @@ module Template {
         public SetDebug(debug?: boolean): void {
             this._debug = debug;
             if (debug) {
-                document.getElementsByTagName("body")[0].classList.add("debug");
+                document.getElementsByTagName("body").item(0).classList.add("debug");
             } else {
-                document.getElementsByTagName("body")[0].classList.remove("debug");
+                document.getElementsByTagName("body").item(0).classList.remove("debug");
             }
         }
 
@@ -109,6 +109,10 @@ module Template {
                 // pre-process the animations in given stage
                 controller.PreparePlay(this.stage_id);
             }
+
+            let body = document.getElementsByTagName("body").item(0);
+            body.classList.add("play");
+            body.classList.remove("stop");
         }
 
         /**
@@ -133,7 +137,9 @@ module Template {
          * Hides all existing contents of current template.
          */
         public Stop(): void {
-            // TODO: Implement a way to hide template contents
+            let body = document.getElementsByTagName("body").item(0);
+            body.classList.remove("play");
+            body.classList.add("stop");
         }
 
         //=====================================================================dd==

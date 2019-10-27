@@ -34,14 +34,5 @@ module Template.ElementAnimation {
             else
                 this._callbacks.push(callback);
         }
-
-        //=====================================================================dd==
-        //
-        //=====================================================================dd==
-
-        public Log(content: string): void
-        {
-            Template.Controller.GetInstance().Log("ElementAnimation.Dependency", content);
-        }
     }
 }

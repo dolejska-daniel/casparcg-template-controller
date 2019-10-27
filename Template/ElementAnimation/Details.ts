@@ -1,9 +1,9 @@
 module Template.ElementAnimation {
     export class Details {
-        readonly delay?: string;
-        readonly duration?: string;
-        readonly timing?: string;
-        readonly origin?: string;
+        public readonly delay?: string;
+        public readonly duration?: string;
+        public readonly timing?: string;
+        public readonly origin?: string;
 
         constructor(source_object?: Partial<ElementAnimation.Details>) {
             // assign values to class fields
@@ -51,15 +51,6 @@ module Template.ElementAnimation {
                 for (let property_id in style_properties)
                     element.style.setProperty(style_properties[property_id], this[entry_name], "important");
             }
-        }
-
-        //=====================================================================dd==
-        //
-        //=====================================================================dd==
-
-        public Log(content: string): void
-        {
-            Template.Controller.GetInstance().Log("ElementAnimation.Details", content);
         }
     }
 }
