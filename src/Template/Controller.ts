@@ -55,8 +55,7 @@ module Template {
          * @param debug Is template in debug mode?
          */
         public static GetInstance(debug?: boolean): Controller {
-            if (Controller._instance)
-            {
+            if (Controller._instance) {
                 Controller._instance.SetDebug(debug);
                 return Controller._instance;
             }

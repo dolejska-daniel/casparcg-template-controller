@@ -28,8 +28,7 @@ module Template.ElementAnimation {
          *
          * @param processPromise Animation process promise.
          */
-        public SetProcessPromise(processPromise: Promise<void>): void
-        {
+        public SetProcessPromise(processPromise: Promise<void>): void {
             this._processPromise = processPromise;
 
             for (let callback_id in this._callbacks)

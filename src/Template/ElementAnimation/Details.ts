@@ -28,8 +28,7 @@ module Template.ElementAnimation {
          *
          * @param element Target element.
          */
-        public ApplyOn(element: HTMLElement): void
-        {
+        public ApplyOn(element: HTMLElement): void {
             // define which CSS properties correspond to which detail entries
             const entries = {
                 "delay": [
@@ -53,8 +52,7 @@ module Template.ElementAnimation {
             };
 
             // for each definition
-            for (let entry_name in entries)
-            {
+            for (let entry_name in entries) {
                 // check whether that detail is set
                 if (!this[entry_name])
                     continue;

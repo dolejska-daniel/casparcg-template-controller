@@ -1,5 +1,10 @@
 window["TemplateController"] = Template.Controller.GetInstance(document.location.hash === "#debug");
 
+
+//=====================================================================dd==
+//  CASPARCG NATIVE INTERFACE
+//=====================================================================dd==
+
 function play() {
     TemplateController.Play();
 }
