@@ -31,8 +31,10 @@ module Template.ElementAnimation {
         public SetProcessPromise(processPromise: Promise<void>): void {
             this._processPromise = processPromise;
 
-            for (let callback_id in this._callbacks)
-                this._processPromise.then(this._callbacks[callback_id]);
+            if (processPromise) {
+                for (let callback_id in this._callbacks)
+                    this._processPromise.then(this._callbacks[callback_id]);
+            }
         }
 
         /**
