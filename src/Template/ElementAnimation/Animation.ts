@@ -1,5 +1,9 @@
-
 module Template.ElementAnimation {
+    /**
+     * Animation.
+     *
+     * This class contains and represents single element animation.
+     */
     export class Animation {
         public readonly id?: string;
         public readonly after?: string;
@@ -9,8 +13,8 @@ module Template.ElementAnimation {
         private readonly _controller: ElementAnimation.Controller;
 
         /**
-         * @param controller Template controller.
-         * @param source_object
+         * @param controller Element specific controller.
+         * @param source_object Object containing animation definition.
          * @constructor
          */
         constructor(controller: ElementAnimation.Controller, source_object: Partial<ElementAnimation.Animation>) {
@@ -25,11 +29,15 @@ module Template.ElementAnimation {
         }
 
         //=====================================================================dd==
-        //
+        //  ANIMATION CONTROLS
         //=====================================================================dd==
 
         /**
+         * Asynchronously starts the animation process.
+         *
          * @param element Target element.
+         * @returns Promise<void> Animation process promise - it will be
+         *   resolved when the animation is finished.
          */
         public Play(element: HTMLElement): Promise<void> {
             // promise completion of the animation
@@ -46,10 +54,12 @@ module Template.ElementAnimation {
         }
 
         //=====================================================================dd==
-        //
+        //  CORE ANIMATION FUNCTIONALITY
         //=====================================================================dd==
 
         /**
+         * Applies defined classes to target element.
+         *
          * @param element Target element.
          */
         private ApplyClasses(element: HTMLElement): void {
@@ -62,6 +72,8 @@ module Template.ElementAnimation {
         }
 
         /**
+         * Applies defined animation details to target element.
+         *
          * @param element Target element.
          */
         private ApplyDetails(element: HTMLElement): void {

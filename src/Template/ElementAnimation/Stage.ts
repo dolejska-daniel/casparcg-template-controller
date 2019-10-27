@@ -1,4 +1,9 @@
 module Template.ElementAnimation {
+    /**
+     * Animation stage.
+     *
+     * This class allows splitting animations into discreet steps.
+     */
     export class Stage {
         get template(): Template.Controller {
             return Template.Controller.GetInstance();
@@ -13,8 +18,8 @@ module Template.ElementAnimation {
         private readonly _animations: ElementAnimation.Animation[];
 
         /**
-         * @param controller
-         * @param source_object
+         * @param controller Element specific controller.
+         * @param source_object Object containing stage definition.
          * @constructor
          */
         constructor(controller: ElementAnimation.Controller, source_object: object) {
@@ -38,7 +43,7 @@ module Template.ElementAnimation {
         }
 
         //=====================================================================dd==
-        //
+        //  ANIMATION CONTROLS
         //=====================================================================dd==
 
         /**
@@ -52,17 +57,6 @@ module Template.ElementAnimation {
                 let animation = this._animations[object_id];
                 previous_animation = this.PlaySingleAnimation(animation, previous_animation);
             }
-        }
-
-        //=====================================================================dd==
-        //
-        //=====================================================================dd==
-
-        /**
-         * Prepares this animation stage.
-         */
-        public PreparePlay(): void {
-            this.PrefetchAnimationIds();
         }
 
         /**
@@ -106,6 +100,17 @@ module Template.ElementAnimation {
             // return this animation's process promise,
             // it will be fulfilled after animation is complete
             return animation_process;
+        }
+
+        //=====================================================================dd==
+        //  ANIMATION PREPARATION CONTROLS
+        //=====================================================================dd==
+
+        /**
+         * Prepares this animation stage.
+         */
+        public PreparePlay(): void {
+            this.PrefetchAnimationIds();
         }
 
         /**

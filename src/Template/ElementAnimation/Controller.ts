@@ -1,4 +1,9 @@
 module Template.ElementAnimation {
+    /**
+     * Element animation controller.
+     *
+     * This class provides per-element animation controls.
+     */
     export class Controller {
         private _element: HTMLElement;
 

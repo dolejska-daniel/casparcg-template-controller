@@ -1,19 +1,16 @@
 module Template.ElementAnimation {
+    /**
+     * Animation dependency.
+     *
+     * This class allows animations to be started after completion of specified
+     * animation (even on completely different element).
+     */
     export class Dependency {
-        set processPromise(value: Promise<void>) {
-            this._processPromise = value;
-
-            if (value != undefined)
-            {
-                for (let callback_id in this._callbacks)
-                    this._processPromise.then(this._callbacks[callback_id]);
-            }
-        }
-
         private _processPromise: Promise<void>;
         private readonly _callbacks: (() => void)[];
 
         /**
+         * @param processPromise Animation process promise.
          * @constructor
          */
         constructor(processPromise?: Promise<void>) {
@@ -22,11 +19,27 @@ module Template.ElementAnimation {
         }
 
         //=====================================================================dd==
-        //
+        //  ANIMATION DEPENDENCY CORE FUNCTIONALITY
         //=====================================================================dd==
 
         /**
-         * @param callback
+         * Sets animation process promise for the dependents.
+         * Also immediately chains already registered trigger functions.
+         *
+         * @param processPromise Animation process promise.
+         */
+        public SetProcessPromise(processPromise: Promise<void>): void
+        {
+            this._processPromise = processPromise;
+
+            for (let callback_id in this._callbacks)
+                this._processPromise.then(this._callbacks[callback_id]);
+        }
+
+        /**
+         * Registers depending animation's trigger function.
+         *
+         * @param callback Animation trigger function.
          */
         public AddDependency(callback: () => void): void {
             if (this._processPromise != undefined)

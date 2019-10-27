@@ -156,7 +156,7 @@ module Template {
         public RegisterAnimation(animation_id: string, animation_promise?: Promise<void>) {
             if (this._dependencies.hasOwnProperty(animation_id)) {
                 // animation ID was already registered, save its process promise
-                this._dependencies[animation_id].processPromise = animation_promise;
+                this._dependencies[animation_id].SetProcessPromise(animation_promise);
             } else {
                 // animation ID was not registered yet, create it
                 this._dependencies[animation_id] = new ElementAnimation.Dependency(animation_promise);
