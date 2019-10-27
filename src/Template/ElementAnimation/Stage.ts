@@ -17,7 +17,7 @@ module Template.ElementAnimation {
          * @param source_object
          * @constructor
          */
-        constructor(controller: ElementAnimation.Controller, source_object) {
+        constructor(controller: ElementAnimation.Controller, source_object: object) {
             if (source_object.hasOwnProperty("id") == false)
                 throw new Error("Invalid base object for ObjectAnimationStage provided - property 'id' is missing.");
 

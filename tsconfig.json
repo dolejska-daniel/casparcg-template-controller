@@ -2,11 +2,34 @@
 	"compilerOptions": {
 		"module": "amd",
 		"target": "es2015",
-		"lib": ["es2015", "es2017", "dom"],
+		"lib": [
+			"es2015",
+			"es2017",
+			"dom"
+		],
 		"outFile": "./build/build.js",
-		"sourceMap": false
+		"removeComments": true,
+		"sourceMap": true,
+		"declaration": false,
+		"noLib": false,
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"pretty": true,
+		"allowUnreachableCode": false,
+		"allowUnusedLabels": false,
+		"noImplicitAny": false,
+		"noImplicitReturns": true,
+		"noImplicitUseStrict": true,
+		"noEmitHelpers": true,
+		"outDir": "build/",
+		"baseUrl": "src/",
+		"listFiles": false
 	},
+	"include": [
+		"src/**/*"
+	],
 	"exclude": [
-		"node_modules"
+		"node_modules",
+		"build"
 	]
 }
