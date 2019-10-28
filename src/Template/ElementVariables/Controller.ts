@@ -5,28 +5,30 @@ module Template.ElementVariables {
 	 * Provides simple interface to template variable control.
 	 */
 	export class Controller {
+		public static readonly CLASS_SELECTOR = "js-update";
+
 		get element(): HTMLElement {
-			return this._element;
+			return this._elementRef.element;
 		}
 
-		private readonly _element: HTMLElement; // FIXME: Reference is lost after animation
+		private readonly _elementRef: ElementReference.Entry;
 		private readonly _module: Modules.ModuleInterface;
 
-		constructor(element: HTMLElement) {
-			this._element = element;
+		constructor(element_ref: ElementReference.Entry) {
+			this._elementRef = element_ref;
 
 			// get module name
-			let module_name = element.getAttribute("data-module");
+			let module_name = this.element.getAttribute("data-module");
 			if (!module_name)
-				ControllerError.SpecError(element.id, "Attribute 'data-module' undefined.");
+				ControllerError.SpecError(this.element.id, "Attribute 'data-module' undefined.");
 
 			// get arguments
-			let module_args_json = element.getAttribute("data-module-args");
+			let module_args_json = this.element.getAttribute("data-module-args");
 			let module_args: object;
 			try {
 				let module_args = JSON.parse(module_args_json);
 			} catch (e) {
-				ControllerError.SpecError(element.id, "Value of attribute 'data-module-args' malformed. (" + e + ")");
+				ControllerError.SpecError(this.element.id, "Value of attribute 'data-module-args' malformed. (" + e + ")");
 			} finally {
 				module_args = module_args ? module_args : [];
 			}
@@ -36,7 +38,7 @@ module Template.ElementVariables {
 				this._module = new Modules[module_name](this);
 				this._module.Initialize(module_args);
 			} catch (e) {
-				ControllerError.SpecError(element.id, "Failed to initialize specified module. (" + e + ")");
+				ControllerError.SpecError(this.element.id, "Failed to initialize specified module. (" + e + ")");
 			}
 		}
 
@@ -50,7 +52,7 @@ module Template.ElementVariables {
 		 * @param data Data provided by CasparCG server.
 		 */
 		public Update(data: any): void {
-		    this._module.Update(data);
+			this._module.Update(data);
 		}
 	}
 
