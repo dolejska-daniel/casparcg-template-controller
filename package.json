@@ -4,10 +4,10 @@
 	"description": "CasparCG HTML template controller.",
 	"scripts": {
 		"test": "echo 'Error: no test specified' && exit 1",
-		"minify": "uglifyjs --ecma 5 -c -o build/build.min.js --source-map filename=build/build.js.map -- build/build.js",
-		"minify-max": "uglifyjs --ecma 5 -c -m -o build/build.min.js --source-map filename=build/build.js.map -- build/build.js",
+		"minify": "uglifyjs --ecma 5 --source-map filename=build/build.js.map -c -o build/build.min.js -- build/build.js",
+		"minify-max": "uglifyjs --ecma 5 --source-map filename=build/build.js.map -c -m -o build/build.min.js -- build/build.js",
 		"build": "tsc && npm run minify",
-		"build-min": "tsc && npm run minify"
+		"build-min": "tsc && npm run minify-max"
 	},
 	"repository": {
 		"type": "git",

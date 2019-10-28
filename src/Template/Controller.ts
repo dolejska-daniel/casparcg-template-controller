@@ -70,10 +70,12 @@ module Template {
          */
         public SetDebug(debug?: boolean): void {
             this._debug = debug;
-            if (debug) {
-                document.getElementsByTagName("body").item(0).classList.add("debug");
-            } else {
-                document.getElementsByTagName("body").item(0).classList.remove("debug");
+            if (debug != undefined) {
+                if (debug) {
+                    document.getElementsByTagName("body").item(0).classList.add("debug");
+                } else {
+                    document.getElementsByTagName("body").item(0).classList.remove("debug");
+                }
             }
         }
 
