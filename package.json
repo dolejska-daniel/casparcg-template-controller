@@ -5,7 +5,7 @@
 	"scripts": {
 		"test": "echo 'Error: no test specified' && exit 1",
 		"minify": "uglifyjs --ecma 5 --source-map filename=build/build.js.map -c -o build/build.min.js -- build/build.js",
-		"minify-max": "uglifyjs --ecma 5 --source-map filename=build/build.js.map -c -m -o build/build.min.js -- build/build.js",
+		"minify-max": "uglifyjs --ecma 5 --source-map filename=build/build.js.map -c --mangle toplevel --mangle-props -o build/build.min.js -- build/build.js",
 		"build": "tsc && npm run minify",
 		"build-min": "tsc && npm run minify-max"
 	},

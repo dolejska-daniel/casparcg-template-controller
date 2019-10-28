@@ -1,6 +1,9 @@
 .idea/**/*
-!.idea/runConfigurations/*
+!.idea/runConfigurations/*.xml
 
 node_modules/*
 
-build/build*
+build/**/*
+!build/defaults.js
+
+!.idea/**/*
