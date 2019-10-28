@@ -17,7 +17,8 @@ module Template {
         private _debug: boolean;
 
         private readonly _dependencies: ElementAnimation.Dependency[];
-        private readonly _controllers: ElementAnimation.Controller[];
+        private readonly _animations: ElementAnimation.Controller[];
+        private readonly _variables: ElementVariables.Controller[];
 
         private static _instance: Template.Controller;
 
@@ -27,38 +28,43 @@ module Template {
          */
         constructor(debug: boolean = false) {
             if (Controller._instance)
-                throw new Error("Template.Controller class is implemented as a singleton. Creating new instances is not allowed.");
+                throw new Error("Template.Controller is implemented as a singleton. Creating new instances is not allowed.");
             Controller._instance = this;
 
             this._stage_id = 0;
             this._dependencies = [];
-            this._controllers = [];
+            this._animations = [];
+            this._variables = [];
             this.SetDebug(debug);
 
-            let animated_elements_collection = document.getElementsByClassName("js-animate");
-            // convert to array
-            let animated_elements = <HTMLElement[]>Array.prototype.slice.call(animated_elements_collection);
-
-            for (let element_id in animated_elements) {
-                if (animated_elements.hasOwnProperty(element_id) == false)
-                    continue;
-
-                let element = animated_elements[element_id];
+            let animated_elements = document.getElementsByClassName("js-animate");
+            for (let element_index = 0; element_index < animated_elements.length; element_index++)
+            {
+                let element = <HTMLElement>animated_elements.item(element_index);
                 let controller = new ElementAnimation.Controller(element);
-                this._controllers.push(controller);
+                this._animations.push(controller);
+            }
+
+            let variable_elements = document.getElementsByClassName("js-update");
+            for (let element_index = 0; element_index < variable_elements.length; element_index++)
+            {
+                let element = <HTMLElement>variable_elements.item(element_index);
+                if (!element.id)
+                    throw new Error("Elements with 'js-update' class are required to have unique identifiers (id='XXX').");
+
+                this._variables[element.id] = new ElementVariables.Controller(element);
             }
         }
 
         /**
          * Get existing or create new template controller instance.
+         * Debug parameter is only used when new instance has to be created.
          *
          * @param debug Is template in debug mode?
          */
         public static GetInstance(debug?: boolean): Controller {
-            if (Controller._instance) {
-                Controller._instance.SetDebug(debug);
+            if (Controller._instance)
                 return Controller._instance;
-            }
 
             return new Controller(debug);
         }
@@ -90,8 +96,8 @@ module Template {
             // prepares current stage to be played
             this.PreparePlay();
 
-            for (let object_id in this._controllers) {
-                let controller = this._controllers[object_id];
+            for (let object_id in this._animations) {
+                let controller = this._animations[object_id];
                 // process the animations in given stage
                 controller.Play(this.stage_id);
             }
@@ -105,8 +111,8 @@ module Template {
             // remove existing dependencies from before
             this.ClearDependencies();
 
-            for (let object_id in this._controllers) {
-                let controller = this._controllers[object_id];
+            for (let object_id in this._animations) {
+                let controller = this._animations[object_id];
                 // pre-process the animations in given stage
                 controller.PreparePlay(this.stage_id);
             }
@@ -131,7 +137,17 @@ module Template {
          * @param data Object containing current values for template variables.
          */
         public Update(data: object): void {
-            // TODO: Implement template variable system
+            for (let element_id in data)
+            {
+                if (data.hasOwnProperty(element_id) == false)
+                    continue;
+
+                let variable_controller = this._variables[element_id];
+                if (variable_controller == undefined)
+                    console.warn(`Variable key '${element_id}' defined in update data does not match any registered variable elements.`);
+
+                variable_controller.Update(data[element_id]);
+            }
         }
 
         /**
@@ -187,7 +203,7 @@ module Template {
          */
         public ClearDependencies(): void {
             for (let object_id in this._dependencies)
-                delete this._controllers[object_id];
+                delete this._animations[object_id];
         }
     }
 }
