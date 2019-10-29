@@ -48,5 +48,12 @@ module Template.ElementAnimation {
             else
                 this._callbacks.push(callback);
         }
+
+        private async TriggerDependencies(): Promise<void> {
+            return new Promise<void>(resolve => {
+                for (let callback_id in this._callbacks)
+                    this._processPromise.then(this._callbacks[callback_id]);
+            });
+        }
     }
 }

@@ -16,9 +16,10 @@ module Template {
 		private _stage_id: number;
 		private _debug: boolean;
 
-		private readonly _dependencies: ElementAnimation.Dependency[];
 		private readonly _animations: ElementAnimation.Controller[];
+		private readonly _animationDependencies: ElementAnimation.Dependency[];
 		private readonly _variables: ElementVariables.Controller[];
+		private readonly _variableDependencies: ElementVariables.Dependency[];
 		private readonly _referenceManager: ElementReference.Manager;
 
 		private static _instance: Template.Controller;
@@ -33,9 +34,10 @@ module Template {
 			Controller._instance = this;
 
 			this._stage_id = 0;
-			this._dependencies = [];
 			this._animations = [];
+			this._animationDependencies = [];
 			this._variables = [];
+			this._variableDependencies = [];
 			this._referenceManager = ElementReference.Manager.GetInstance();
 			this.SetDebug(debug);
 
@@ -57,9 +59,13 @@ module Template {
 					throw new Error("Elements with '" + ElementVariables.Controller.CLASS_SELECTOR + "' class are required to have unique identifiers (id='XXX').");
 
 				let element_ref = this._referenceManager.RegisterElement(element);
-				let controller = new ElementVariables.Controller(element_ref);
-				this._variables[element.id] = controller;
+				this._variables[element.id] = new ElementVariables.Controller(element_ref);
+				this._variableDependencies[element.id] = new ElementVariables.Dependency();
 			}
+
+			// load possible variable dependencies
+			this.Play();
+			this._stage_id++;
 		}
 
 		/**
@@ -115,7 +121,7 @@ module Template {
 		 */
 		private PreparePlay(): void {
 			// remove existing dependencies from before
-			this.ClearDependencies();
+			this.ClearAnimationDependencies();
 
 			for (let object_id in this._animations) {
 				let controller = this._animations[object_id];
@@ -153,7 +159,10 @@ module Template {
 					continue;
 				}
 
+				// process variable update
 				variable_controller.Update(data[element_id]);
+				// inform that update has been processed
+				this._variableDependencies[element_id].TriggerDependencies();
 			}
 			this._referenceManager.UpdateBaseContents();
 		}
@@ -179,12 +188,12 @@ module Template {
 		 * @param animation_promise Stage process promise.
 		 */
 		public RegisterAnimation(animation_id: string, animation_promise?: Promise<void>) {
-			if (this._dependencies.hasOwnProperty(animation_id)) {
+			if (this._animationDependencies.hasOwnProperty(animation_id)) {
 				// animation ID was already registered, save its process promise
-				this._dependencies[animation_id].SetProcessPromise(animation_promise);
+				this._animationDependencies[animation_id].SetProcessPromise(animation_promise);
 			} else {
 				// animation ID was not registered yet, create it
-				this._dependencies[animation_id] = new ElementAnimation.Dependency(animation_promise);
+				this._animationDependencies[animation_id] = new ElementAnimation.Dependency(animation_promise);
 			}
 		}
 
@@ -196,22 +205,40 @@ module Template {
 		 * @param animation_id Stage-unique animation identifier.
 		 * @param callback Animation's trigger function.
 		 */
-		public RegisterDependency(animation_id: string, callback: () => void): void {
-			if (this._dependencies.hasOwnProperty(animation_id) == false) {
+		public RegisterAnimationDependency(animation_id: string, callback: () => void): void {
+			if (this._animationDependencies.hasOwnProperty(animation_id) == false) {
 				// either this animation depends on nonexistent animation
 				// or animation ID prefetch was not done
-				throw new Error("Trying to register animation dependency to unregistered/nonexistent animation.");
+				throw new Error(`Trying to register dependency to unregistered/nonexistent animation (${animation_id}).`);
 			}
 
-			this._dependencies[animation_id].AddDependency(callback);
+			this._animationDependencies[animation_id].AddDependency(callback);
 		}
 
 		/**
 		 * Clears all registered animation dependencies.
 		 */
-		public ClearDependencies(): void {
-			for (let object_id in this._dependencies)
-				delete this._animations[object_id];
+		public ClearAnimationDependencies(): void {
+			for (let object_id in this._animationDependencies)
+				delete this._animationDependencies[object_id];
+		}
+
+		/**
+		 * Registers existing dependency on specific animation and provides its
+		 * trigger function. After specified animation is finished, all
+		 * registered dependencies will be triggered.
+		 *
+		 * @param variable_id Unique variable element identifier.
+		 * @param callback Animation's trigger function.
+		 */
+		public RegisterVariableDependency(variable_id: string, callback: () => void): void {
+			if (this._variableDependencies.hasOwnProperty(variable_id) == false) {
+				// either this animation depends on nonexistent variable
+				// or variable was not registered properly
+				throw new Error(`Trying to register dependency to unregistered/nonexistent variable (${variable_id}).`);
+			}
+
+			this._variableDependencies[variable_id].AddDependency(callback);
 		}
 	}
 }

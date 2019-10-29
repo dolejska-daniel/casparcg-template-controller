@@ -26,7 +26,7 @@ module Template.ElementVariables {
 			let module_args_json = this.element.getAttribute("data-module-args");
 			let module_args: object;
 			try {
-				let module_args = JSON.parse(module_args_json);
+				module_args = JSON.parse(module_args_json);
 			} catch (e) {
 				ControllerError.SpecError(this.element.id, "Value of attribute 'data-module-args' malformed. (" + e + ")");
 			}

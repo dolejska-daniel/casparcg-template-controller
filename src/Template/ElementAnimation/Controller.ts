@@ -21,12 +21,20 @@ module Template.ElementAnimation {
 			this._elementRef = element_ref;
 
 			let source_object_json = this.element.getAttribute("data-animations");
-			let source_object = JSON.parse(source_object_json);
+			let source_object = [];
+			try {
+				source_object = JSON.parse(source_object_json);
+			} catch (e) {
+				ControllerError.SpecError(this.element.id, "Value of attribute 'data-animations' malformed. (" + e + ")");
+			}
 
 			this._stages = [];
 			for (let object_id in source_object) {
 				if (source_object.hasOwnProperty(object_id)) {
 					let stage = new ElementAnimation.Stage(this, source_object[object_id]);
+					if (this._stages.hasOwnProperty(stage.id))
+						ControllerError.SpecError(this.element.id, "Animation stage '" + stage.id + "' defined more than once!");
+
 					this._stages[stage.id] = stage;
 				}
 			}
@@ -79,6 +87,14 @@ module Template.ElementAnimation {
 		 */
 		public ReplaceElement(new_element: HTMLElement) {
 			return this._elementRef.element = new_element;
+		}
+	}
+
+	class ControllerError {
+		public static SpecError(element_id: string, reason: string) {
+			throw new Error(
+				`Invalid animation specification for element #${element_id}: ${reason}`
+			)
 		}
 	}
 }

@@ -3,7 +3,6 @@ module Template.ElementReference {
 		set element(value: HTMLElement) {
 			this._element.parentElement.replaceChild(value, this._element);
 			this._element = value;
-			this._base.innerHTML = this._element.innerHTML;
 			Manager.GetInstance().ElementReplaced(this._element);
 		}
 
@@ -13,6 +12,7 @@ module Template.ElementReference {
 
 		/** Current element reference. */
 		private _element: HTMLElement;
+
 		/** Initial element reference. */
 		private readonly _base: HTMLElement;
 

@@ -30,7 +30,8 @@ module Template.ElementReference {
 
 		public RegisterElement(element: HTMLElement): ElementReference.Entry {
 			if (this._entries.hasOwnProperty(element.id))
-				throw new Error(`Element #${element.id} has already been registered in ElementReference.Manager.`);
+				return this._entries[element.id];
+			//throw new Error(`Element #${element.id} has already been registered in ElementReference.Manager.`);
 
 			let entry = new Entry(element);
 			this._entries[element.id] = entry;
