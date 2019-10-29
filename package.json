@@ -9,7 +9,7 @@
 		"build-all": "tsc && npm run minify",
 		"build-all-min": "tsc && npm run minify-max",
 		"minify": "uglifyjs --ecma 5 --source-map filename=build/build.js.map -c -o build/build.min.js -- build/build.js",
-		"minify-max": "uglifyjs --ecma 5 --source-map filename=build/build.js.map -c --mangle toplevel --mangle-props -o build/build.min.js -- build/build.js"
+		"minify-max": "uglifyjs --ecma 5 --source-map filename=build/build.js.map -c --mangle reserved=[Template] --mangle-props reserved=[Controller,GetInstance,Play,Update,Next,Stop] -o build/build.min.js -- build/build.js"
 	},
 	"repository": {
 		"type": "git",
