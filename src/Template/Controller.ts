@@ -148,8 +148,10 @@ module Template {
 					continue;
 
 				let variable_controller = this._variables[element_id];
-				if (variable_controller == undefined)
+				if (variable_controller == undefined) {
 					console.warn(`Variable key '${element_id}' defined in update data does not match any registered variable elements.`);
+					continue;
+				}
 
 				variable_controller.Update(data[element_id]);
 			}

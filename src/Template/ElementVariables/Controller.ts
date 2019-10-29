@@ -29,8 +29,6 @@ module Template.ElementVariables {
 				let module_args = JSON.parse(module_args_json);
 			} catch (e) {
 				ControllerError.SpecError(this.element.id, "Value of attribute 'data-module-args' malformed. (" + e + ")");
-			} finally {
-				module_args = module_args ? module_args : [];
 			}
 
 			// instantiate and initialize module
