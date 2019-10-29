@@ -2,12 +2,14 @@
 	"name": "template-controller",
 	"version": "0.1.0",
 	"description": "CasparCG HTML template controller.",
+	"homepage": "https://git.dolejska.me/casparcg/template-controller",
 	"scripts": {
 		"test": "echo 'Error: no test specified' && exit 1",
+		"build": "tsc",
+		"build-all": "tsc && npm run minify",
+		"build-all-min": "tsc && npm run minify-max",
 		"minify": "uglifyjs --ecma 5 --source-map filename=build/build.js.map -c -o build/build.min.js -- build/build.js",
-		"minify-max": "uglifyjs --ecma 5 --source-map filename=build/build.js.map -c --mangle toplevel --mangle-props -o build/build.min.js -- build/build.js",
-		"build": "tsc && npm run minify",
-		"build-min": "tsc && npm run minify-max"
+		"minify-max": "uglifyjs --ecma 5 --source-map filename=build/build.js.map -c --mangle toplevel --mangle-props -o build/build.min.js -- build/build.js"
 	},
 	"repository": {
 		"type": "git",
@@ -20,6 +22,10 @@
 		"animation"
 	],
 	"author": "Daniel Dolejška",
+	"bugs": {
+		"email": "dolejskad@gmail.com",
+		"url": "https://git.dolejska.me/casparcg/template-controller/issues"
+	},
 	"license": "proprietary",
 	"devDependencies": {
 		"typescript": "^3.6.4",

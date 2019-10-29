@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JsonSchemaMappingsProjectConfiguration">
+    <state>
+      <map>
+        <entry key="animations">
+          <value>
+            <SchemaInfo>
+              <option name="name" value="animations" />
+              <option name="relativePathToSchema" value="schemas/animations.json" />
+              <option name="schemaVersion" value="JSON schema version 7" />
+            </SchemaInfo>
+          </value>
+        </entry>
+      </map>
+    </state>
+  </component>
+</project>
