@@ -49,15 +49,19 @@ module Template.ElementAnimation {
 		 * @param element Target element.
 		 */
 		public Play(element: HTMLElement): void {
-			// apply animation
+			// apply predefined animation classes
 			this.ApplyClasses(element);
+			// apply predefined element details
 			this.ApplyDetails(element);
 		}
 
 		public Clear(element: HTMLElement): void {
+			// remove previously applied classes
 			this.RemoveClasses(element);
+			// remove previously applied classes
 			this.RemoveDetails(element);
 
+			// force page reflow - this allows us to start next animation
 			void element.offsetWidth;
 		}
 
@@ -71,9 +75,11 @@ module Template.ElementAnimation {
 		 * @param element Target element.
 		 */
 		private ApplyClasses(element: HTMLElement): void {
+			// force page reflow - this allows us to start next animation
+			void element.offsetWidth;
+
 			// remove initial classes
 			element.classList.remove("initially-invisible");
-			element.classList.add("animated");
 
 			for (let class_id in this.classes)
 				element.classList.add(this.classes[class_id]);
@@ -85,15 +91,11 @@ module Template.ElementAnimation {
 		 * @param element Target element.
 		 */
 		private RemoveClasses(element: HTMLElement): void {
-			element.classList.remove("animated");
-
 			// remove applied classes
 			for (let class_id in this.classes)
 				element.classList.remove(this.classes[class_id]);
 
-			// FIXME: When removed, animations fail to launch
-
-			//element.setAttribute("data-active-animation", "");
+			element.setAttribute("data-active-animation", "");
 		}
 
 		/**

@@ -44,12 +44,11 @@ module Template.ElementAnimation {
 				let element = <HTMLElement>event.target;
 
 				let finished_animation_id = element.getAttribute("data-active-animation");
-				template_controller.TriggerAnimationDependencies(finished_animation_id);
-
-				// FIXME: Somehow remove previous animations
 				let finished_animation = this.GetAnimation(template_controller.stage_id, finished_animation_id);
 				finished_animation = finished_animation || this.GetAnimation(0, finished_animation_id);
 				finished_animation.Clear(element);
+
+				template_controller.TriggerAnimationDependencies(finished_animation_id);
 			});
 		}
 

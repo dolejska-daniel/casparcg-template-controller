@@ -35,7 +35,6 @@ module Template.ElementVariables {
 		 * Triggers all registered animations.
 		 */
 		public TriggerDependencies(): void {
-			console.log("triggering dependencies for: " + this._variable_id);
 			for (let callback_id = 0; callback_id < this._callbacks.length; callback_id++)
 				this._callbacks[callback_id]();
 		}

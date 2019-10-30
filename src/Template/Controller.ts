@@ -175,16 +175,14 @@ module Template {
 		//=====================================================================dd==
 
 		/**
-		 * Registers existing animation ID. Can also specify its process
-		 * promise.
+		 * Registers existing animation.
 		 *
-		 * @param animation_id Stage-unique animation identifier.
+		 * @param animation Animation reference.
 		 */
-		public RegisterAnimation(animation_id: string) {
-			if (this._animationDependencies.hasOwnProperty(animation_id) == false) {
+		public RegisterAnimation(animation: ElementAnimation.Animation): void {
+			if (this._animationDependencies.hasOwnProperty(animation.id) == false) {
 				// animation ID was not registered yet, create it
-				// TODO: Save whole reference to animation
-				this._animationDependencies[animation_id] = new ElementAnimation.Dependency();
+				this._animationDependencies[animation.id] = new ElementAnimation.Dependency(animation);
 			}
 		}
 
@@ -223,8 +221,11 @@ module Template {
 		 */
 		public ClearAnimationDependencies(): void {
 			for (let object_id in this._animationDependencies) {
-				// TODO: Remove only dependencies not from stage 0!
-				delete this._animationDependencies[object_id];
+				// do not remove registered animations from stage 0
+				// these animations are supposed to be variable dependent
+				// they have to stay intact
+				if (this._animationDependencies[object_id].target_animation.stage_id > 0)
+					delete this._animationDependencies[object_id];
 			}
 		}
 
@@ -243,7 +244,6 @@ module Template {
 				throw new Error(`Trying to register dependency to unregistered/nonexistent variable (${variable_id}).`);
 			}
 
-			console.log("registering variable dependency: " + variable_id);
 			this._variableDependencies[variable_id].AddDependency(callback);
 		}
 	}

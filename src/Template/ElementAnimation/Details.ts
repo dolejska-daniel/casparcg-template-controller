@@ -28,7 +28,7 @@ module Template.ElementAnimation {
 	    };
 
 	    public readonly delay?: string;
-	    public readonly duration?: string;
+	    public readonly duration?: string = "500ms";
 	    public readonly timing?: string;
 	    public readonly origin?: string;
 

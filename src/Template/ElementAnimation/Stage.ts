@@ -46,6 +46,7 @@ module Template.ElementAnimation {
 					if (this.id == 0) {
 						// this is special non-playable animation group
 						if (animation.IsVariableDependent() == false) {
+							// any variable independent animations are not supposed to be here
 							StageError.SpecMistake(controller.element.id, "Variable independent animation defined in stage 0! This stage is only used for variable dependent animations.");
 							continue;
 						}
@@ -132,7 +133,7 @@ module Template.ElementAnimation {
 				let animation = this._animations[object_id];
 
 				// other animations may depend on this animation
-				this.template.RegisterAnimation(animation.id);
+				this.template.RegisterAnimation(animation);
 			}
 		}
 

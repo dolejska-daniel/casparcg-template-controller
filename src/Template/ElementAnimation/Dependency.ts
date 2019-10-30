@@ -6,13 +6,19 @@ module Template.ElementAnimation {
      * animation (even on completely different element).
      */
     export class Dependency {
-        private readonly _callbacks: (() => void)[];
+	    get target_animation(): ElementAnimation.Animation {
+		    return this._animation;
+	    }
+
+	    private readonly _animation: Template.ElementAnimation.Animation;
+	    private readonly _callbacks: (() => void)[];
 
         /**
          * @constructor
          */
-        constructor() {
-            this._callbacks = [];
+        constructor(animation: ElementAnimation.Animation) {
+	        this._animation = animation;
+	        this._callbacks = [];
         }
 
         //=====================================================================dd==
