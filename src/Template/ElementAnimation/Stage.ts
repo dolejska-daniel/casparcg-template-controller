@@ -41,7 +41,7 @@ module Template.ElementAnimation {
 					let animation = new ElementAnimation.Animation(controller, animations[object_id]);
 					if (this.id == 0) {
 						// this is special non-playable animation group
-						if (animation.IsVariableDependent()) {
+						if (animation.IsVariableDependent() == false) {
 							StageError.SpecMistake(controller.element.id, "Variable independent animation defined in stage 0! This stage is only used for variable dependent animations.");
 							continue;
 						}
@@ -77,9 +77,8 @@ module Template.ElementAnimation {
 		private PlaySingleAnimation(animation: ElementAnimation.Animation, previous_animation_id?: string): string {
 			// create animation trigger - this function starts the animation
 			let animation_trigger = () => {
-				// apply animation onto prepared element
+				// apply and trigger animation onto target element
 				animation.Play(this._controller.element);
-				// trigger animation
 			};
 
 			if (animation.IsDependent()) {

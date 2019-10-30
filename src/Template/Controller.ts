@@ -59,7 +59,7 @@ module Template {
 			}
 
 			// load possible variable dependencies
-			//this.Play();
+			this.Play();
 			this._stage_id++;
 		}
 

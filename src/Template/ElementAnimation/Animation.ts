@@ -108,16 +108,25 @@ module Template.ElementAnimation {
 		//  CORE ANIMATION FUNCTIONALITY
 		//=====================================================================dd==
 
-		public IsDependent() {
-			return this.after;
+		/**
+		 * Does animation depend on other animation or action?
+		 */
+		public IsDependent(): boolean {
+			return typeof this.after == "string";
 		}
 
-		public IsAnimationDependent() {
+		/**
+		 * Does animation depend on other animation?
+		 */
+		public IsAnimationDependent(): boolean {
 			return this.IsDependent() && !this.IsVariableDependent();
 		}
 
-		public IsVariableDependent() {
-			return this.after && this.after[0] == "$";
+		/**
+		 * Does animation depend on variable element update?
+		 */
+		public IsVariableDependent(): boolean {
+			return this.IsDependent() && this.after[0] == "$";
 		}
 	}
 }
