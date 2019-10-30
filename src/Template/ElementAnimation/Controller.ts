@@ -8,17 +8,17 @@ module Template.ElementAnimation {
 		public static readonly CLASS_SELECTOR = "js-animate";
 
 		get element(): HTMLElement {
-			return this._elementRef.element;
+			return this._element;
 		}
 
-		private readonly _elementRef: ElementReference.Entry;
+		private readonly _element: HTMLElement;
 		private readonly _stages: ElementAnimation.Stage[];
 
 		/**
-		 * @param element_ref Target element of the animation.
+		 * @param element Target element of the animation.
 		 */
-		constructor(element_ref: ElementReference.Entry) {
-			this._elementRef = element_ref;
+		constructor(element: HTMLElement) {
+			this._element = element;
 
 			let source_object_json = this.element.getAttribute("data-animations");
 			let source_object = [];
@@ -38,6 +38,18 @@ module Template.ElementAnimation {
 					this._stages[stage.id] = stage;
 				}
 			}
+
+			this.element.addEventListener("animationend", (event) => {
+				let template_controller = Template.Controller.GetInstance();
+				let element = <HTMLElement>event.target;
+
+				let finished_animation_id = element.getAttribute("data-active-animation");
+				template_controller.TriggerAnimationDependencies(finished_animation_id);
+
+				// FIXME: Somehow remove previous animations
+				// let finished_animation = this.GetAnimation(template_controller.stage_id, finished_animation_id);
+				// finished_animation.Clear(element);
+			});
 		}
 
 		//=====================================================================dd==
@@ -69,24 +81,11 @@ module Template.ElementAnimation {
 		}
 
 		//=====================================================================dd==
-		//  TARGET ELEMENT CONTROLS
+		//  ANIMATION CONTROLS
 		//=====================================================================dd==
 
-		/**
-		 * Duplicates original animation target element.
-		 */
-		public DuplicateElement(): HTMLElement {
-			return this._elementRef.GetDuplicate();
-		}
-
-		/**
-		 * Replaces existing target element with its duplicate which triggers
-		 * applied animation.
-		 *
-		 * @param new_element Element to be inserted into current template.
-		 */
-		public ReplaceElement(new_element: HTMLElement) {
-			return this._elementRef.element = new_element;
+		public GetAnimation(stage_id: number, animation_id: string): ElementAnimation.Animation {
+			return this._stages[stage_id].GetAnimation(animation_id);
 		}
 	}
 

@@ -8,14 +8,14 @@ module Template.ElementVariables {
 		public static readonly CLASS_SELECTOR = "js-update";
 
 		get element(): HTMLElement {
-			return this._elementRef.element;
+			return this._element;
 		}
 
-		private readonly _elementRef: ElementReference.Entry;
+		private readonly _element: HTMLElement;
 		private readonly _module: Modules.ModuleInterface;
 
-		constructor(element_ref: ElementReference.Entry) {
-			this._elementRef = element_ref;
+		constructor(element: HTMLElement) {
+			this._element = element;
 
 			// get module name
 			let module_name = this.element.getAttribute("data-module");

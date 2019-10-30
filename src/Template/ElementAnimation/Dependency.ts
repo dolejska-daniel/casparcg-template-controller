@@ -6,15 +6,12 @@ module Template.ElementAnimation {
      * animation (even on completely different element).
      */
     export class Dependency {
-        private _processPromise: Promise<void>;
         private readonly _callbacks: (() => void)[];
 
         /**
-         * @param processPromise Animation process promise.
          * @constructor
          */
-        constructor(processPromise?: Promise<void>) {
-            this._processPromise = processPromise;
+        constructor() {
             this._callbacks = [];
         }
 
@@ -23,37 +20,20 @@ module Template.ElementAnimation {
         //=====================================================================dd==
 
         /**
-         * Sets animation process promise for the dependents.
-         * Also immediately chains already registered trigger functions.
-         *
-         * @param processPromise Animation process promise.
-         */
-        public SetProcessPromise(processPromise: Promise<void>): void {
-            this._processPromise = processPromise;
-
-            if (processPromise) {
-                for (let callback_id in this._callbacks)
-                    this._processPromise.then(this._callbacks[callback_id]);
-            }
-        }
-
-        /**
          * Registers depending animation's trigger function.
          *
          * @param callback Animation trigger function.
          */
         public AddDependency(callback: () => void): void {
-            if (this._processPromise != undefined)
-                this._processPromise.then(callback);
-            else
-                this._callbacks.push(callback);
+	        this._callbacks.push(callback);
         }
 
-        private async TriggerDependencies(): Promise<void> {
-            return new Promise<void>(resolve => {
-                for (let callback_id in this._callbacks)
-                    this._processPromise.then(this._callbacks[callback_id]);
-            });
+	    /**
+	     * Triggers all registered animations.
+	     */
+	    public TriggerDependencies(): void {
+		    for (let callback_id = 0; callback_id < this._callbacks.length; callback_id++)
+			    this._callbacks[callback_id]();
         }
     }
 }

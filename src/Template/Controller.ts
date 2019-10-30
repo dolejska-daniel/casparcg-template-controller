@@ -20,7 +20,6 @@ module Template {
 		private readonly _animationDependencies: ElementAnimation.Dependency[];
 		private readonly _variables: ElementVariables.Controller[];
 		private readonly _variableDependencies: ElementVariables.Dependency[];
-		private readonly _referenceManager: ElementReference.Manager;
 
 		private static _instance: Template.Controller;
 
@@ -38,7 +37,6 @@ module Template {
 			this._animationDependencies = [];
 			this._variables = [];
 			this._variableDependencies = [];
-			this._referenceManager = ElementReference.Manager.GetInstance();
 			this.SetDebug(debug);
 
 			let animated_elements = document.getElementsByClassName(ElementAnimation.Controller.CLASS_SELECTOR);
@@ -47,9 +45,7 @@ module Template {
 				if (!element.id)
 					throw new Error("Elements with '" + ElementAnimation.Controller.CLASS_SELECTOR + "' class are required to have unique identifiers (id='XXX').");
 
-				let element_ref = this._referenceManager.RegisterElement(element);
-				let controller = new ElementAnimation.Controller(element_ref);
-				this._animations.push(controller);
+				this._animations[element.id] = new ElementAnimation.Controller(element);
 			}
 
 			let variable_elements = document.getElementsByClassName(ElementVariables.Controller.CLASS_SELECTOR);
@@ -58,13 +54,12 @@ module Template {
 				if (!element.id)
 					throw new Error("Elements with '" + ElementVariables.Controller.CLASS_SELECTOR + "' class are required to have unique identifiers (id='XXX').");
 
-				let element_ref = this._referenceManager.RegisterElement(element);
-				this._variables[element.id] = new ElementVariables.Controller(element_ref);
+				this._variables[element.id] = new ElementVariables.Controller(element);
 				this._variableDependencies[element.id] = new ElementVariables.Dependency();
 			}
 
 			// load possible variable dependencies
-			this.Play();
+			//this.Play();
 			this._stage_id++;
 		}
 
@@ -164,7 +159,6 @@ module Template {
 				// inform that update has been processed
 				this._variableDependencies[element_id].TriggerDependencies();
 			}
-			this._referenceManager.UpdateBaseContents();
 		}
 
 		/**
@@ -185,15 +179,11 @@ module Template {
 		 * promise.
 		 *
 		 * @param animation_id Stage-unique animation identifier.
-		 * @param animation_promise Stage process promise.
 		 */
-		public RegisterAnimation(animation_id: string, animation_promise?: Promise<void>) {
-			if (this._animationDependencies.hasOwnProperty(animation_id)) {
-				// animation ID was already registered, save its process promise
-				this._animationDependencies[animation_id].SetProcessPromise(animation_promise);
-			} else {
+		public RegisterAnimation(animation_id: string) {
+			if (this._animationDependencies.hasOwnProperty(animation_id) == false) {
 				// animation ID was not registered yet, create it
-				this._animationDependencies[animation_id] = new ElementAnimation.Dependency(animation_promise);
+				this._animationDependencies[animation_id] = new ElementAnimation.Dependency();
 			}
 		}
 
@@ -213,6 +203,18 @@ module Template {
 			}
 
 			this._animationDependencies[animation_id].AddDependency(callback);
+		}
+
+		/**
+		 * @param animation_id Stage-unique animation identifier.
+		 */
+		public TriggerAnimationDependencies(animation_id: string): void {
+			if (this._animationDependencies.hasOwnProperty(animation_id) == false) {
+				// either specified animation does not exist or animation ID prefetch was not done
+				throw new Error(`Trying to trigger dependencies of unregistered/nonexistent animation (${animation_id}).`);
+			}
+
+			this._animationDependencies[animation_id].TriggerDependencies();
 		}
 
 		/**

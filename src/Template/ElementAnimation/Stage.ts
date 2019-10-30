@@ -41,12 +41,12 @@ module Template.ElementAnimation {
 					let animation = new ElementAnimation.Animation(controller, animations[object_id]);
 					if (this.id == 0) {
 						// this is special non-playable animation group
-						if (!animation.after || animation.after[0] != "$") {
-							// animation does not have ID defined (no animation can depend on it)
+						if (animation.IsVariableDependent()) {
 							StageError.SpecMistake(controller.element.id, "Variable independent animation defined in stage 0! This stage is only used for variable dependent animations.");
+							continue;
 						}
 					}
-					this._animations.push(animation);
+					this._animations[animation.id] = animation;
 				}
 			}
 		}
@@ -61,10 +61,10 @@ module Template.ElementAnimation {
 		public Play(): void {
 			this.PreparePlay();
 
-			let previous_animation: Promise<void> = undefined;
+			let previous_animation_id: string = undefined;
 			for (let object_id in this._animations) {
 				let animation = this._animations[object_id];
-				previous_animation = this.PlaySingleAnimation(animation, previous_animation);
+				previous_animation_id = this.PlaySingleAnimation(animation, previous_animation_id);
 			}
 		}
 
@@ -72,29 +72,20 @@ module Template.ElementAnimation {
 		 * Processes single animation.
 		 *
 		 * @param animation Animation to be started/queued up.
-		 * @param previous_animation Previous animation's process promise.
+		 * @param previous_animation_id Previous animation's process promise.
 		 */
-		private PlaySingleAnimation(animation: ElementAnimation.Animation, previous_animation?: Promise<void>): Promise<void> {
-			// prepare element for animation
-			let element = this._controller.DuplicateElement();
-			// apply animation onto prepared element
-			let animation_process = animation.Play(element);
-
+		private PlaySingleAnimation(animation: ElementAnimation.Animation, previous_animation_id?: string): string {
 			// create animation trigger - this function starts the animation
 			let animation_trigger = () => {
-				// trigger animation by replacing the element
-				this._controller.ReplaceElement(element);
+				// apply animation onto prepared element
+				animation.Play(this._controller.element);
+				// trigger animation
 			};
 
-			if (animation.id) {
-				// animation id is defined, other animations may depend on it
-				this.template.RegisterAnimation(animation.id, animation_process);
-			}
-
-			if (animation.after) {
+			if (animation.IsDependent()) {
 				// animation depends on something it can either be different animation or
 				// it can depend on variable element update
-				if (animation.after[0] == "$") {
+				if (animation.IsVariableDependent()) {
 					// animation depends on variable element update
 					// register its trigger function
 					this.template.RegisterVariableDependency(animation.after.substr(1), animation_trigger);
@@ -104,19 +95,18 @@ module Template.ElementAnimation {
 					this.template.RegisterAnimationDependency(animation.after, animation_trigger);
 				}
 			} else {
-				// animation does not depend on different animation
-				if (previous_animation) {
-					// let's chain it after the previous one
-					previous_animation.then(animation_trigger);
+				// animation does not explicitly depend on different animation
+				if (previous_animation_id) {
+					// previous animation exists, it now depends on previous animation
+					this.template.RegisterAnimationDependency(previous_animation_id, animation_trigger);
 				} else {
 					// there is no previous animation, lets trigger it
 					animation_trigger();
 				}
 			}
 
-			// return this animation's process promise,
-			// it will be fulfilled after animation is complete
-			return animation_process;
+			// return this animation's identifier
+			return animation.id;
 		}
 
 		//=====================================================================dd==
@@ -137,9 +127,14 @@ module Template.ElementAnimation {
 		private PrefetchAnimationIds(): void {
 			for (let object_id in this._animations) {
 				let animation = this._animations[object_id];
-				if (animation.id)
-					this.template.RegisterAnimation(animation.id);
+
+				// other animations may depend on this animation
+				this.template.RegisterAnimation(animation.id);
 			}
+		}
+
+		public GetAnimation(animation_id: string): ElementAnimation.Animation {
+			return this._animations[animation_id];
 		}
 	}
 
@@ -152,6 +147,6 @@ module Template.ElementAnimation {
 
 		public static SpecMistake(element_id: string, reason: string) {
 			console.error(`Wrong animation stage specification for element #${element_id}: ${reason}`);
-        }
-    }
+		}
+	}
 }

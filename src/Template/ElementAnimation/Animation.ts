@@ -23,6 +23,9 @@ module Template.ElementAnimation {
 
 			// assign values to class fields
 			Object.assign(this, source_object);
+			if (!this.id)
+				this.id = "_" + Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
+
 			// assign class fields
 			this._controller = controller;
 			this.details = new Details(source_object["details"]);
@@ -36,21 +39,18 @@ module Template.ElementAnimation {
 		 * Asynchronously starts the animation process.
 		 *
 		 * @param element Target element.
-		 * @returns Promise<void> Animation process promise - it will be
-		 *   resolved when the animation is finished.
 		 */
-		public Play(element: HTMLElement): Promise<void> {
-			// promise completion of the animation
-			return new Promise<void>(resolve => {
-				// apply animation
-				this.ApplyClasses(element);
-				this.ApplyDetails(element);
+		public Play(element: HTMLElement): void {
+			// apply animation
+			this.ApplyClasses(element);
+			this.ApplyDetails(element);
 
-				// resolve the promise after animation ends
-				element.addEventListener("animationend", () => {
-					resolve();
-				});
-			});
+			void element.offsetWidth;
+		}
+
+		public Clear(element: HTMLElement): void {
+			this.RemoveClasses(element);
+			this.RemoveDetails(element);
 		}
 
 		//=====================================================================dd==
@@ -65,10 +65,25 @@ module Template.ElementAnimation {
 		private ApplyClasses(element: HTMLElement): void {
 			// remove initial classes
 			element.classList.remove("initially-invisible");
-			element.classList.add("animated");
+			// element.classList.add("animated");
 
 			for (let class_id in this.classes)
 				element.classList.add(this.classes[class_id]);
+
+			element.setAttribute("data-active-animation", this.id);
+		}
+
+		/**
+		 * @param element Target element.
+		 */
+		private RemoveClasses(element: HTMLElement): void {
+			// remove applied classes
+			for (let class_id in this.classes)
+				element.classList.remove(this.classes[class_id]);
+
+			// FIXME: When removed, animations fail to launch
+			//element.classList.remove("animated");
+			//element.setAttribute("data-active-animation", "");
 		}
 
 		/**
@@ -78,6 +93,31 @@ module Template.ElementAnimation {
 		 */
 		private ApplyDetails(element: HTMLElement): void {
 			this.details.ApplyOn(element);
+		}
+
+		/**
+		 * Applies defined animation details to target element.
+		 *
+		 * @param element Target element.
+		 */
+		private RemoveDetails(element: HTMLElement): void {
+			this.details.RemoveFrom(element);
+		}
+
+		//=====================================================================dd==
+		//  CORE ANIMATION FUNCTIONALITY
+		//=====================================================================dd==
+
+		public IsDependent() {
+			return this.after;
+		}
+
+		public IsAnimationDependent() {
+			return this.IsDependent() && !this.IsVariableDependent();
+		}
+
+		public IsVariableDependent() {
+			return this.after && this.after[0] == "$";
 		}
 	}
 }
