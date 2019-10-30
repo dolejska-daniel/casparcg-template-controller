@@ -5,19 +5,27 @@ module Template.ElementAnimation {
 	 * This class contains and represents single element animation.
 	 */
 	export class Animation {
+		private get controller(): ElementAnimation.Controller {
+			return this._stage.controller;
+		}
+
+		public get stage_id(): number {
+			return this._stage.id;
+		}
+
 		public readonly id?: string;
 		public readonly after?: string;
 		public readonly classes: string[];
 		public readonly details: ElementAnimation.Details;
 
-		private readonly _controller: ElementAnimation.Controller;
+		private readonly _stage: ElementAnimation.Stage;
 
 		/**
-		 * @param controller Element specific controller.
+		 * @param stage Element specific controller.
 		 * @param source_object Object containing animation definition.
 		 * @constructor
 		 */
-		constructor(controller: ElementAnimation.Controller, source_object: Partial<ElementAnimation.Animation>) {
+		constructor(stage: ElementAnimation.Stage, source_object: Partial<ElementAnimation.Animation>) {
 			if (source_object.hasOwnProperty("classes") == false)
 				throw new Error("Invalid base object for ObjectAnimation provided - property 'classes' is missing.");
 
@@ -27,7 +35,7 @@ module Template.ElementAnimation {
 				this.id = "_" + Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
 
 			// assign class fields
-			this._controller = controller;
+			this._stage = stage;
 			this.details = new Details(source_object["details"]);
 		}
 
@@ -44,13 +52,13 @@ module Template.ElementAnimation {
 			// apply animation
 			this.ApplyClasses(element);
 			this.ApplyDetails(element);
-
-			void element.offsetWidth;
 		}
 
 		public Clear(element: HTMLElement): void {
 			this.RemoveClasses(element);
 			this.RemoveDetails(element);
+
+			void element.offsetWidth;
 		}
 
 		//=====================================================================dd==
@@ -65,7 +73,7 @@ module Template.ElementAnimation {
 		private ApplyClasses(element: HTMLElement): void {
 			// remove initial classes
 			element.classList.remove("initially-invisible");
-			// element.classList.add("animated");
+			element.classList.add("animated");
 
 			for (let class_id in this.classes)
 				element.classList.add(this.classes[class_id]);
@@ -77,12 +85,14 @@ module Template.ElementAnimation {
 		 * @param element Target element.
 		 */
 		private RemoveClasses(element: HTMLElement): void {
+			element.classList.remove("animated");
+
 			// remove applied classes
 			for (let class_id in this.classes)
 				element.classList.remove(this.classes[class_id]);
 
 			// FIXME: When removed, animations fail to launch
-			//element.classList.remove("animated");
+
 			//element.setAttribute("data-active-animation", "");
 		}
 

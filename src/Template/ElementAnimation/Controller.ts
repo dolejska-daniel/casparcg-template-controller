@@ -47,8 +47,9 @@ module Template.ElementAnimation {
 				template_controller.TriggerAnimationDependencies(finished_animation_id);
 
 				// FIXME: Somehow remove previous animations
-				// let finished_animation = this.GetAnimation(template_controller.stage_id, finished_animation_id);
-				// finished_animation.Clear(element);
+				let finished_animation = this.GetAnimation(template_controller.stage_id, finished_animation_id);
+				finished_animation = finished_animation || this.GetAnimation(0, finished_animation_id);
+				finished_animation.Clear(element);
 			});
 		}
 

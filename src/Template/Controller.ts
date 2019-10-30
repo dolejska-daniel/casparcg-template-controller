@@ -55,7 +55,7 @@ module Template {
 					throw new Error("Elements with '" + ElementVariables.Controller.CLASS_SELECTOR + "' class are required to have unique identifiers (id='XXX').");
 
 				this._variables[element.id] = new ElementVariables.Controller(element);
-				this._variableDependencies[element.id] = new ElementVariables.Dependency();
+				this._variableDependencies[element.id] = new ElementVariables.Dependency(element.id);
 			}
 
 			// load possible variable dependencies
@@ -183,6 +183,7 @@ module Template {
 		public RegisterAnimation(animation_id: string) {
 			if (this._animationDependencies.hasOwnProperty(animation_id) == false) {
 				// animation ID was not registered yet, create it
+				// TODO: Save whole reference to animation
 				this._animationDependencies[animation_id] = new ElementAnimation.Dependency();
 			}
 		}
@@ -221,8 +222,10 @@ module Template {
 		 * Clears all registered animation dependencies.
 		 */
 		public ClearAnimationDependencies(): void {
-			for (let object_id in this._animationDependencies)
+			for (let object_id in this._animationDependencies) {
+				// TODO: Remove only dependencies not from stage 0!
 				delete this._animationDependencies[object_id];
+			}
 		}
 
 		/**
@@ -240,6 +243,7 @@ module Template {
 				throw new Error(`Trying to register dependency to unregistered/nonexistent variable (${variable_id}).`);
 			}
 
+			console.log("registering variable dependency: " + variable_id);
 			this._variableDependencies[variable_id].AddDependency(callback);
 		}
 	}

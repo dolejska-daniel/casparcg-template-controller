@@ -6,12 +6,15 @@ module Template.ElementVariables {
 	 * animation (even on completely different element).
 	 */
 	export class Dependency {
+
+		private readonly _variable_id: string;
 		private readonly _callbacks: (() => void)[];
 
 		/**
 		 * @constructor
 		 */
-		constructor() {
+		constructor(variable_id: string) {
+			this._variable_id = variable_id;
 			this._callbacks = [];
 		}
 
@@ -32,6 +35,7 @@ module Template.ElementVariables {
 		 * Triggers all registered animations.
 		 */
 		public TriggerDependencies(): void {
+			console.log("triggering dependencies for: " + this._variable_id);
 			for (let callback_id = 0; callback_id < this._callbacks.length; callback_id++)
 				this._callbacks[callback_id]();
 		}

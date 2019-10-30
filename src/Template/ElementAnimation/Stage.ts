@@ -9,6 +9,10 @@ module Template.ElementAnimation {
 			return Template.Controller.GetInstance();
 		}
 
+		get controller(): ElementAnimation.Controller {
+			return this._controller;
+		}
+
 		get id(): number {
 			return this._id;
 		}
@@ -38,7 +42,7 @@ module Template.ElementAnimation {
 			let animations = source_object["animations"];
 			for (let object_id in animations) {
 				if (animations.hasOwnProperty(object_id)) {
-					let animation = new ElementAnimation.Animation(controller, animations[object_id]);
+					let animation = new ElementAnimation.Animation(this, animations[object_id]);
 					if (this.id == 0) {
 						// this is special non-playable animation group
 						if (animation.IsVariableDependent() == false) {
@@ -87,7 +91,7 @@ module Template.ElementAnimation {
 				if (animation.IsVariableDependent()) {
 					// animation depends on variable element update
 					// register its trigger function
-					this.template.RegisterVariableDependency(animation.after.substr(1), animation_trigger);
+					this.template.RegisterVariableDependency(animation.after.substring(1), animation_trigger);
 				} else {
 					// animation depends on different animation
 					// register its trigger function
