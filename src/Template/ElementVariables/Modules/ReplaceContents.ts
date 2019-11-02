@@ -7,12 +7,12 @@ module Template.ElementVariables.Modules {
 	 * It uses update data as element's new content.
 	 */
 	export class ReplaceContents extends BaseModule {
-		Initialize(args: object): void {
+		public Initialize(args: object): void {
 			if (args)
 				console.warn("ReplaceContents module does not accept any arguments!");
 		}
 
-		Update(data: any): void {
+		public Update(data: any): void {
 			if (typeof data != "string" && typeof data != "number")
 				console.warn("ReplaceContents module received non-string update data!");
 

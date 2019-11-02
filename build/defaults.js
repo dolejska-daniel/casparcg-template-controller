@@ -17,10 +17,11 @@ function update(d) {
     if (d) {
         try {
             d = JSON.parse(d);
-            TemplateController.Update(d);
         } catch (e) {
-            console.error("UPDATE command received malformed data. Only JSON is supported.");
+	        console.error("UPDATE command received malformed data. Only JSON is supported. (" + e + ")");
+	        return;
         }
+	    TemplateController.Update(d);
     }
 }
 
