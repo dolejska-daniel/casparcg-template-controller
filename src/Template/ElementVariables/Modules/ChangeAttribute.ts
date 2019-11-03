@@ -16,13 +16,13 @@ module Template.ElementVariables.Modules {
 					continue;
 
 				if (typeof attribute_name != "string") {
-					console.warn(`ChangeAttribute module update data contains non-string attribute name '${attribute_name}'!`);
+					console.warn(`ChangeAttribute module argument data do contain non-string attribute name '${attribute_name}'!`);
 					continue;
 				}
 
 				let value = args[attribute_name];
 				if (typeof value != "string" && typeof value != "number") {
-					console.warn(`ChangeAttribute module argument data contains non-trivial attribute value '${value}' for attribute '${attribute_name}'!`);
+					console.warn(`ChangeAttribute module argument data do contain non-trivial attribute value '${value}' for attribute '${attribute_name}'!`);
 					continue;
 				}
 
@@ -39,7 +39,7 @@ module Template.ElementVariables.Modules {
 					continue;
 
 				if (typeof attribute_name != "string") {
-					console.warn(`ChangeAttribute module update data contains non-string attribute name '${attribute_name}'!`);
+					console.warn(`ChangeAttribute module update data do contain non-string attribute name '${attribute_name}'!`);
 					continue;
 				}
 
@@ -51,7 +51,7 @@ module Template.ElementVariables.Modules {
 			let content = this.attributeDefaults[attribute_name] || data;
 			if (typeof data == "object") {
 				if (typeof this.attributeDefaults[attribute_name] == "undefined")
-					return console.warn(`ChangeAttribute module update data contains non-trivial attribute value '${attribute_name}' for attribute '${attribute_name}', but no formatting has been predefined!`);
+					return console.warn(`ChangeAttribute module update data do contain non-trivial attribute value '${attribute_name}' for attribute '${attribute_name}', but no formatting has been predefined!`);
 
 				data.reverse();
 				do {
@@ -65,13 +65,13 @@ module Template.ElementVariables.Modules {
 				while (data.length > 0);
 
 				if (content.indexOf('{}') != -1)
-					console.warn(`ChangeAttribute module update data does not contain enough values for '${attribute_name}' attribute' formatting!`);
+					console.warn(`ChangeAttribute module update data do not contain enough values for '${attribute_name}' attribute' formatting!`);
 			}
 
 			try {
 				this.element.setAttribute(attribute_name, content);
 			} catch (e) {
-				console.error(`ChangeAttribute module update data contain invalid attribute name '${attribute_name}'!`);
+				console.error(`ChangeAttribute module update data do contain invalid attribute name '${attribute_name}'!`);
 			}
 		}
 	}
