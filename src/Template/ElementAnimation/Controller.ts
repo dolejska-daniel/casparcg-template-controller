@@ -7,6 +7,10 @@ module Template.ElementAnimation {
 	export class Controller {
 		public static readonly CLASS_SELECTOR = "js-animate";
 
+		get template(): Template.Controller {
+			return Template.Controller.GetInstance();
+		}
+
 		get element(): HTMLElement {
 			return this._element;
 		}
@@ -36,6 +40,9 @@ module Template.ElementAnimation {
 						ControllerError.SpecError(this.element.id, "Animation stage '" + stage.id + "' defined more than once!");
 
 					this._stages[stage.id] = stage;
+
+					if (this.template.IsInitialized() && stage.id < 2)
+						stage.Play();
 				}
 			}
 

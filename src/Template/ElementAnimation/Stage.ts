@@ -6,7 +6,7 @@ module Template.ElementAnimation {
 	 */
 	export class Stage {
 		get template(): Template.Controller {
-			return Template.Controller.GetInstance();
+			return this.controller.template;
 		}
 
 		get controller(): ElementAnimation.Controller {
@@ -50,6 +50,10 @@ module Template.ElementAnimation {
 							StageError.SpecMistake(controller.element.id, "Variable independent animation defined in stage 0! This stage is only used for variable dependent animations.");
 							continue;
 						}
+					}
+					if (this.template.IsInitialized() && animation.IsDependent()) {
+						StageError.SpecMistake(controller.element.id, "Template has already been initialized - animations registered this late may only be independent!");
+						continue;
 					}
 					this._animations[animation.id] = animation;
 				}

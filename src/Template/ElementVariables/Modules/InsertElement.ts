@@ -1,5 +1,7 @@
 ///<reference path="BaseModule.ts"/>
 module Template.ElementVariables.Modules {
+	import has = Reflect.has;
+
 	/**
 	 * InsertElement update module.
 	 *
@@ -7,7 +9,6 @@ module Template.ElementVariables.Modules {
 	 * It uses update data as element's additional content.
 	 */
 	export class InsertElement extends BaseModule {
-
 		private templateInstanceId: number = 0;
 		private templateElement: HTMLElement;
 		private variableElements: HTMLElement[];
@@ -77,7 +78,17 @@ module Template.ElementVariables.Modules {
 			this.templateInstanceId++;
 			this.element.appendChild(element);
 
-			// TODO: register in controller (to allow animations)?
+			let selector = ElementAnimation.Controller.CLASS_SELECTOR;
+			let template_controller = Template.Controller.GetInstance();
+			let hasClass = new RegExp(`(^${selector}\\s)|(\\s${selector}\\s)|(\\s${selector}$)|(^${selector}$)`);
+			if (element.classList.value.match(hasClass))
+				template_controller.RegisterAnimatedElement(element);
+
+			let animated_elements = element.getElementsByClassName(ElementAnimation.Controller.CLASS_SELECTOR);
+			for (let element_index = 0; element_index < animated_elements.length; element_index++) {
+				let element = <HTMLElement>animated_elements.item(element_index);
+				template_controller.RegisterAnimatedElement(element);
+			}
 		}
 	}
 }

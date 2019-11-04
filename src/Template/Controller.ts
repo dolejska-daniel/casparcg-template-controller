@@ -15,6 +15,7 @@ module Template {
 
 		private _stage_id: number;
 		private _debug: boolean;
+		private _is_initialized: boolean = false;
 
 		private readonly _animations: ElementAnimation.Controller[];
 		private readonly _animationDependencies: ElementAnimation.Dependency[];
@@ -42,21 +43,16 @@ module Template {
 			let animated_elements = document.getElementsByClassName(ElementAnimation.Controller.CLASS_SELECTOR);
 			for (let element_index = 0; element_index < animated_elements.length; element_index++) {
 				let element = <HTMLElement>animated_elements.item(element_index);
-				if (!element.id)
-					throw new Error("Elements with '" + ElementAnimation.Controller.CLASS_SELECTOR + "' class are required to have unique identifiers (id='XXX').");
-
-				this._animations[element.id] = new ElementAnimation.Controller(element);
+				this.RegisterAnimatedElement(element);
 			}
 
 			let variable_elements = document.getElementsByClassName(ElementVariables.Controller.CLASS_SELECTOR);
 			for (let element_index = 0; element_index < variable_elements.length; element_index++) {
 				let element = <HTMLElement>variable_elements.item(element_index);
-				if (!element.id)
-					throw new Error("Elements with '" + ElementVariables.Controller.CLASS_SELECTOR + "' class are required to have unique identifiers (id='XXX').");
-
-				this._variables[element.id] = new ElementVariables.Controller(element);
-				this._variableDependencies[element.id] = new ElementVariables.Dependency(element.id);
+				this.RegisterVariableElement(element);
 			}
+
+			this._is_initialized = true;
 
 			// load possible variable dependencies
 			this.Play();
@@ -90,6 +86,10 @@ module Template {
 					document.getElementsByTagName("body").item(0).classList.remove("debug");
 				}
 			}
+		}
+
+		public IsInitialized(): boolean {
+			return this._is_initialized
 		}
 
 		//=====================================================================dd==
@@ -168,6 +168,25 @@ module Template {
 			let body = document.getElementsByTagName("body").item(0);
 			body.classList.remove("play");
 			body.classList.add("stop");
+		}
+
+		//=====================================================================dd==
+		//  ELEMENT REGISTRATION CONTROLS
+		//=====================================================================dd==
+
+		public RegisterAnimatedElement(element: HTMLElement) {
+			if (!element.id)
+				throw new Error("Elements with '" + ElementAnimation.Controller.CLASS_SELECTOR + "' class are required to have unique identifiers (id='XXX').");
+
+			this._animations[element.id] = new ElementAnimation.Controller(element);
+		}
+
+		public RegisterVariableElement(element: HTMLElement) {
+			if (!element.id)
+				throw new Error("Elements with '" + ElementVariables.Controller.CLASS_SELECTOR + "' class are required to have unique identifiers (id='XXX').");
+
+			this._variables[element.id] = new ElementVariables.Controller(element);
+			this._variableDependencies[element.id] = new ElementVariables.Dependency(element.id);
 		}
 
 		//=====================================================================dd==
