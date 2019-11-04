@@ -17,7 +17,8 @@ module Template.ElementVariables.Modules {
 		private timer;
 
 		public Initialize(args: object): void {
-			if (typeof args != "undefined" && typeof args != "object")
+			args = args || {};
+			if (typeof args != "object")
 				return console.warn("ChangeAttribute module received non-object argument data!");
 
 			if (args.hasOwnProperty("hideDays"))
