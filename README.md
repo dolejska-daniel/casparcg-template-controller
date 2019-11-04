@@ -62,7 +62,7 @@ Value of this attribute is JSON, compliant with `schemas/animations.json` schema
 This configuration defines two animations.
 These will be played in their specified order - consecutively.
 
-Animations will begin playing immediately after `play()` is invoked (CG PLAY command).
+Animations will begin playing immediately after `play()` is invoked (`CG PLAY` command).
 
 #### Multiple stage animations
 **Element A** `data-animations=`
@@ -96,8 +96,8 @@ Animations will begin playing immediately after `play()` is invoked (CG PLAY com
 This configuration defines four animations in two separate stages.
 Animations in each stage will be played in their specified order - consecutively.
 
-First animation stage will begin playing immediately after `play()` is invoked (CG PLAY command).
-Second animation stage will only begin playing after `next()` is invoked (CG NEXT command).
+First animation stage will begin playing immediately after `play()` is invoked (`CG PLAY` command).
+Second animation stage will only begin playing after `next()` is invoked (`CG NEXT` command).
 
 #### Depending animations
 Animations may depend on each other - after some animation is played and finishes, any dependent animations are played.
@@ -137,10 +137,10 @@ This behaviour is specified by animation's `after` property.
 This configuration defines one animation on each two different elements.
 Animation `second` will be played after animation `first` due to specified dependency `after: first`.
 
-Animations will begin playing immediately after `play()` is invoked (CG PLAY command).
+Animations will begin playing immediately after `play()` is invoked (`CG PLAY` command).
 
 #### Update depending animations
-Animations may also depend on element updates (due to `update()` - CG UPDATE commands).
+Animations may also depend on element updates (due to `update()` - `CG UPDATE` commands).
 This behaviour is also specified by animation's `after` property, but value being prefixed by `$`.
 
 **Element A**
@@ -168,12 +168,66 @@ This animation depends on update event of element with id `element_id` (symbol `
 Immediately after `ExampleModule` module finishes element update, this animation will be triggered and played.
 
 ### Variability
+Contents of the template may be dynamically changed by invoking `update()` function.
+This function is invoked by CasparCG on `CG UPDATE` command.
+
 Variable elements are required to have `js-update` class and unique `id` defined.
 Update module is specified by `data-module` element attribute.
-Any module specific arguments can be passed by `data-module-args` element attribute.
+Only one module may be used per element.
+Any module-specific arguments can be passed by `data-module-args` element attribute.
 
 #### Modules overview
+Update modules define specific behaviour that will be applied during an element update.
+
+##### Countdown module
 _TBD_
+
+##### InsertElement module
+This module uses predefined HTML element and uses it as a template.
+For each `update()` invocation, new element is created from pre-defined template.
+Variable elements defined within template are filled with provided data and element is then added to the document.
+
+Elements using this module (`data-module="InsertElement"`) are required to have unique `id` defined.
+
+Template element must always be defined.
+This element has `js-insert-template` class and is nested in updatable element.
+
+Template variable elements are optional.
+These elements have `js-insert-var` class, are nested in template element and are also required to have unique `id` defined.
+Their `id` must have prefix consisting of updatable element's `id`.
+
+**Example**
+```html
+<div class="js-update" id="insert" data-module="InsertElement">
+    <div class="js-insert-template">
+        <span class="js-insert-var" id="insert-var1"></span>
+        <span class="js-insert-var" id="insert-var2"></span>
+    </div>
+</div>
+```
+```json
+{
+  "insert": {
+    "var1": "Secret value is: ",
+    "var2": 123
+  }
+}
+```
+
+Element template can also define and use animations without dependencies (`after=XXX` is not allowed):
+
+```html
+<div class="js-update" id="insert" data-module="InsertElement">
+    <div class="js-insert-template js-animate" id="insert-template"
+         data-animations='[
+             {"id": 1, "animations": [
+                 { "classes": ["fadeInRight"] }
+             ]}
+         ]'>
+        <span class="js-insert-var" id="insert-content"></span>
+    </div>
+</div>
+``` 
 
 ##### ReplaceContents module
 _TBD_

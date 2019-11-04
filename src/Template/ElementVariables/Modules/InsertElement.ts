@@ -18,9 +18,9 @@ module Template.ElementVariables.Modules {
 				console.warn("InsertElement module does not accept any arguments!");
 
 			// check template existence
-			let template_elements = this.element.getElementsByClassName("js-update-element");
+			let template_elements = this.element.getElementsByClassName("js-insert-template");
 			if (template_elements.length != 1)
-				return console.error(`Single InsertElement module' template element (class='js-update-element') is required to be present (${template_elements.length} found)!`);
+				return console.error(`Single InsertElement module' template element (class='js-insert-template') is required to be present (${template_elements.length} found)!`);
 
 			// duplicate template and remove it from page
 			this.templateElement = <HTMLElement>template_elements[0].cloneNode(true);
@@ -30,7 +30,7 @@ module Template.ElementVariables.Modules {
 
 			// register defined variables (to ease access)
 			this.variableElements = [];
-			let variable_elements = this.templateElement.getElementsByClassName("js-update-var");
+			let variable_elements = this.templateElement.getElementsByClassName("js-insert-var");
 			for (let element_id = 0; element_id < variable_elements.length; element_id++) {
 				let variable_element = variable_elements.item(element_id);
 				if (!variable_element.id || variable_element.id.indexOf(`${this.element.id}-`))
@@ -68,7 +68,7 @@ module Template.ElementVariables.Modules {
 			element.id = `${element.id}-${this.templateInstanceId}`;
 
 			// update IDs of underlying variable elements
-			let variable_elements = element.getElementsByClassName("js-update-var");
+			let variable_elements = element.getElementsByClassName("js-insert-var");
 			for (let element_id = 0; element_id < variable_elements.length; element_id++) {
 				let variable_element = <HTMLElement>variable_elements.item(element_id);
 				variable_element.id = `${variable_element.id}-${this.templateInstanceId}`;
@@ -80,10 +80,13 @@ module Template.ElementVariables.Modules {
 
 			let selector = ElementAnimation.Controller.CLASS_SELECTOR;
 			let template_controller = Template.Controller.GetInstance();
+
+			// check whether insert template is animated and register it if so
 			let hasClass = new RegExp(`(^${selector}\\s)|(\\s${selector}\\s)|(\\s${selector}$)|(^${selector}$)`);
 			if (element.classList.value.match(hasClass))
 				template_controller.RegisterAnimatedElement(element);
 
+			// register animated child elements
 			let animated_elements = element.getElementsByClassName(ElementAnimation.Controller.CLASS_SELECTOR);
 			for (let element_index = 0; element_index < animated_elements.length; element_index++) {
 				let element = <HTMLElement>animated_elements.item(element_index);
