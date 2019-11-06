@@ -7,21 +7,21 @@ module Template.ElementAnimation {
     export class Details {
 	    // define which CSS properties correspond to which detail entries
 	    public static ENTRIES = {
-		    "delay": [
+		    delay: [
 			    "-webkit-animation-delay",
 			    "animation-delay",
 		    ],
-		    "duration": [
+		    duration: [
 			    "-webkit-animation-duration",
 			    "animation-duration",
 			    "-webkit-transition-duration",
 			    "transition-duration",
 		    ],
-		    "timing": [
+		    timing: [
 			    "-webkit-animation-timing-function",
 			    "animation-timing-function",
 		    ],
-		    "origin": [
+		    origin: [
 			    "-webkit-transform-origin",
 			    "transform-origin",
 		    ],
@@ -62,10 +62,15 @@ module Template.ElementAnimation {
 			    // each CSS property set to value specified by detail entry
 			    for (let property_id in style_properties)
 				    if (style_properties.hasOwnProperty(property_id))
-					    element.style.setProperty(style_properties[property_id], this[entry_name], "important");
+					    element.style.setProperty(style_properties[property_id], this[entry_name], "important"); // force override
 		    }
 	    }
 
+	    /**
+	     * Removes animation details from target element.
+	     *
+	     * @param element Target element.
+	     */
 	    public RemoveFrom(element: HTMLElement) {
 		    // for each definition
 		    for (let entry_name in Details.ENTRIES) {

@@ -12,7 +12,7 @@ module Template.ElementVariables.Modules {
 				console.warn("ReplaceContents module does not accept any arguments!");
 		}
 
-		public Update(data: any): void {
+		public ProcessUpdate(data: any): void {
 			if (typeof data != "string" && typeof data != "number")
 				console.warn("ReplaceContents module received non-string update data!");
 

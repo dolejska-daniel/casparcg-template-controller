@@ -15,6 +15,6 @@ module Template.ElementVariables.Modules {
 		 *
 		 * @param data Updated contents.
 		 */
-		Update(data: any): void;
+		ProcessUpdate(data: any): void;
 	}
 }

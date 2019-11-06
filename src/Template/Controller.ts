@@ -174,6 +174,11 @@ module Template {
 		//  ELEMENT REGISTRATION CONTROLS
 		//=====================================================================dd==
 
+		/**
+		 * Appropriately registers new animated element.
+		 *
+		 * @param element Animated element.
+		 */
 		public RegisterAnimatedElement(element: HTMLElement) {
 			if (!element.id)
 				throw new Error("Elements with '" + ElementAnimation.Controller.CLASS_SELECTOR + "' class are required to have unique identifiers (id='XXX').");
@@ -181,6 +186,11 @@ module Template {
 			this._animations[element.id] = new ElementAnimation.Controller(element);
 		}
 
+		/**
+		 * Appropriately registers variable element in the template.
+		 *
+		 * @param element Variable element.
+		 */
 		public RegisterVariableElement(element: HTMLElement) {
 			if (!element.id)
 				throw new Error("Elements with '" + ElementVariables.Controller.CLASS_SELECTOR + "' class are required to have unique identifiers (id='XXX').");

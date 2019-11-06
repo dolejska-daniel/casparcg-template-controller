@@ -58,6 +58,7 @@ module Template.ElementAnimation {
 			this.RemoveDetails(element);
 
 			// force page reflow - this allows us to start next animation
+			// EXTREMELY important!
 			void element.offsetWidth;
 		}
 
@@ -84,6 +85,8 @@ module Template.ElementAnimation {
 		}
 
 		/**
+		 * Removes previously applied classes from target element.
+		 *
 		 * @param element Target element.
 		 */
 		private RemoveClasses(element: HTMLElement): void {
@@ -104,7 +107,7 @@ module Template.ElementAnimation {
 		}
 
 		/**
-		 * Applies defined animation details to target element.
+		 * Removes applied animation details from target element.
 		 *
 		 * @param element Target element.
 		 */

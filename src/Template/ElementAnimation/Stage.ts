@@ -38,25 +38,31 @@ module Template.ElementAnimation {
 			if (typeof this._id != "number" || this._id < 0)
 				StageError.SpecError(controller.element.id, `ID '${this._id}' is not valid! Only numeric values >=0 are accepted.`);
 
+			// process all defined animations within this stage
 			this._animations = [];
 			let animations = source_object["animations"];
 			for (let object_id in animations) {
-				if (animations.hasOwnProperty(object_id)) {
-					let animation = new ElementAnimation.Animation(this, animations[object_id]);
-					if (this.id == 0) {
-						// this is special non-playable animation group
-						if (animation.IsVariableDependent() == false) {
-							// any variable independent animations are not supposed to be here
-							StageError.SpecMistake(controller.element.id, "Variable independent animation defined in stage 0! This stage is only used for variable dependent animations.");
-							continue;
-						}
-					}
-					if (this.template.IsInitialized() && animation.IsDependent()) {
-						StageError.SpecMistake(controller.element.id, "Template has already been initialized - animations registered this late may only be independent!");
+				if (animations.hasOwnProperty(object_id) == false)
+					continue;
+
+				// process defined animation within this stage
+				let animation = new ElementAnimation.Animation(this, animations[object_id]);
+				if (this.id == 0) {
+					// this is special non-playable animation group
+					if (animation.IsVariableDependent() == false) {
+						// any variable independent animations are not supposed to be here
+						StageError.SpecMistake(controller.element.id, "Variable independent animation defined in stage 0! This stage is only used for variable dependent animations.");
 						continue;
 					}
-					this._animations[animation.id] = animation;
 				}
+				if (this.template.IsInitialized() && animation.IsDependent()) {
+					// animation stages added later during template's lifetime
+					// possibly by update modules
+					// TODO: Is this necessary? Should animations which were added late be able to depend on each other?
+					StageError.SpecMistake(controller.element.id, "Template has already been initialized - animations registered this late may only be independent!");
+					continue;
+				}
+				this._animations[animation.id] = animation;
 			}
 		}
 
@@ -68,11 +74,14 @@ module Template.ElementAnimation {
 		 * Starts or queues up existing animations within this stage.
 		 */
 		public Play(): void {
+			// prepare stage animations to be played (map animation ids, ...)
 			this.PreparePlay();
 
+			// process all defined animation within this stage
 			let previous_animation_id: string = undefined;
 			for (let object_id in this._animations) {
 				let animation = this._animations[object_id];
+				// process given animation - run it, chain it or schedule it
 				previous_animation_id = this.PlaySingleAnimation(animation, previous_animation_id);
 			}
 		}
@@ -141,6 +150,11 @@ module Template.ElementAnimation {
 			}
 		}
 
+		/**
+		 * Gets animation by its ID from this animation stage.
+		 *
+		 * @param animation_id Stage-unique animation identifier.
+		 */
 		public GetAnimation(animation_id: string): ElementAnimation.Animation {
 			return this._animations[animation_id];
 		}

@@ -31,7 +31,7 @@ module Template.ElementVariables.Modules {
 				this.hideMinutes = !!args["hideMinutes"];
 		}
 
-		public Update(data: any): void {
+		public ProcessUpdate(data: any): void {
 			if (typeof data != "number")
 				return console.warn("ChangeAttribute module received non-numeric update data! (unix timestamp expected)");
 

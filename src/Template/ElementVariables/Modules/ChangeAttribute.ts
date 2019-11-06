@@ -30,7 +30,7 @@ module Template.ElementVariables.Modules {
 			}
 		}
 
-		public Update(data: any): void {
+		public ProcessUpdate(data: any): void {
 			if (typeof data != "object")
 				return console.warn("ChangeAttribute module received non-object update data!");
 

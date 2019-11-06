@@ -26,6 +26,6 @@ module Template.ElementVariables.Modules {
 		/**
 		 * @inheritDoc ModuleInterface
 		 */
-		abstract Update(data: any): void;
+		abstract ProcessUpdate(data: any): void;
 	}
 }

@@ -50,7 +50,7 @@ module Template.ElementVariables {
 		 * @param data Data provided by CasparCG server.
 		 */
 		public Update(data: any): void {
-			this._module.Update(data);
+			this._module.ProcessUpdate(data);
 		}
 	}
 
