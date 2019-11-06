@@ -49,10 +49,10 @@ Value of this attribute is JSON, compliant with `schemas/animations.json` schema
     "id": 1,
     "animations": [
       {
-        "classes": [...]
+        "classes": [ "..." ]
       },
       {
-        "classes": [...]
+        "classes": [ "..." ]
       },
     ]
   }
@@ -72,10 +72,10 @@ Animations will begin playing immediately after `play()` is invoked (`CG PLAY` c
     "id": 1,
     "animations": [
       {
-        "classes": [...]
+        "classes": [ "..." ]
       },
       {
-        "classes": [...]
+        "classes": [ "..." ]
       },
     ]
   },
@@ -83,10 +83,10 @@ Animations will begin playing immediately after `play()` is invoked (`CG PLAY` c
     "id": 2,
     "animations": [
       {
-        "classes": [...]
+        "classes": [ "..." ]
       },
       {
-        "classes": [...]
+        "classes": [ "..." ]
       },
     ]
   },
@@ -111,7 +111,7 @@ This behaviour is specified by animation's `after` property.
     "animations": [
       {
         "id": "first",
-        "classes": [...]
+        "classes": [ "..." ]
       }
     ]
   }
@@ -127,7 +127,7 @@ This behaviour is specified by animation's `after` property.
       {
         "id": "second",
         "after": "first",
-        "classes": [...]
+        "classes": [ "..." ]
       }
     ]
   }
@@ -141,7 +141,7 @@ Animations will begin playing immediately after `play()` is invoked (`CG PLAY` c
 
 #### Update depending animations
 Animations may also depend on element updates (due to `update()` - `CG UPDATE` commands).
-This behaviour is also specified by animation's `after` property, but value being prefixed by `$`.
+This behaviour is also specified by animation's `after` property, but value is prefixed with `$`.
 
 **Element A**
 ```html
@@ -156,7 +156,7 @@ This behaviour is also specified by animation's `after` property, but value bein
     "animations": [
       {
         "after": "$element_id",
-        "classes": [...]
+        "classes": [ "..." ]
       }
     ]
   }
@@ -226,11 +226,33 @@ Array of strings is then used to replace `{}` symbols in their provided order.
 ```
 
 #### Countdown module
-_TBD_
+This module creates and displays countdown timer for specified time interval.
+Countdown is started after update data are received.
+This module expects unix timestamp of future point in time or number of seconds to count down from.
+If `input_timestamp * 1000 < Date.now()` it is autimatically considered as a number of second to count down from
+(`input_timestamp` being number received from update data content).
 
 | `data-module` | `data-module-args` |
 |---------------|--------------------|
 | `Countdown`   | _None_             |
+
+**Example template definition**
+```html
+<div class="js-update" id="countdown1" data-module="Countdown"></div>
+<div class="js-update" id="countdown2" data-module="Countdown"></div>
+```
+**Example update command data**
+```json
+{
+  "countdown1": 1577836800,
+  "countdown2": 600
+}
+```
+**Example result**
+```html
+<div class="js-update" id="countdown1" data-module="Countdown">54:05:00:00</div>
+<div class="js-update" id="countdown2" data-module="Countdown">10:00</div>
+```
 
 #### InsertElement module
 This module uses predefined HTML element as a "input formatting" template.
