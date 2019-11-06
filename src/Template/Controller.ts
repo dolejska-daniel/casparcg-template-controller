@@ -40,16 +40,16 @@ module Template {
 			this._variableDependencies = [];
 			this.SetDebug(debug);
 
-			let animated_elements = document.getElementsByClassName(ElementAnimation.Controller.CLASS_SELECTOR);
-			for (let element_index = 0; element_index < animated_elements.length; element_index++) {
-				let element = <HTMLElement>animated_elements.item(element_index);
-				this.RegisterAnimatedElement(element);
-			}
-
 			let variable_elements = document.getElementsByClassName(ElementVariables.Controller.CLASS_SELECTOR);
 			for (let element_index = 0; element_index < variable_elements.length; element_index++) {
 				let element = <HTMLElement>variable_elements.item(element_index);
 				this.RegisterVariableElement(element);
+			}
+
+			let animated_elements = document.getElementsByClassName(ElementAnimation.Controller.CLASS_SELECTOR);
+			for (let element_index = 0; element_index < animated_elements.length; element_index++) {
+				let element = <HTMLElement>animated_elements.item(element_index);
+				this.RegisterAnimatedElement(element);
 			}
 
 			this._is_initialized = true;

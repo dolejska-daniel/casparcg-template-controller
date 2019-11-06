@@ -5,10 +5,6 @@ module Template.ElementAnimation {
 	 * This class contains and represents single element animation.
 	 */
 	export class Animation {
-		private get controller(): ElementAnimation.Controller {
-			return this._stage.controller;
-		}
-
 		public get stage_id(): number {
 			return this._stage.id;
 		}
@@ -32,7 +28,7 @@ module Template.ElementAnimation {
 			// assign values to class fields
 			Object.assign(this, source_object);
 			if (!this.id)
-				this.id = "_" + Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
+				this.id = Utils.Random.GetRandomId();
 
 			// assign class fields
 			this._stage = stage;

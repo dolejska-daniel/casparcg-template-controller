@@ -57,7 +57,7 @@ module Template.ElementVariables.Modules {
 				do {
 					let replacement = data.pop();
 					if (content.indexOf('{}') == -1) {
-						console.warn(`ChangeAttribute module update data do contain too many values for '${attribute_name}' attribute' formatting!`);
+						console.warn(`ChangeAttribute module update data do contain too many values for '${attribute_name}' attribute formatting!`);
 						continue;
 					}
 					content = content.replace('{}', replacement);
@@ -65,7 +65,10 @@ module Template.ElementVariables.Modules {
 				while (data.length > 0);
 
 				if (content.indexOf('{}') != -1)
-					console.warn(`ChangeAttribute module update data do not contain enough values for '${attribute_name}' attribute' formatting!`);
+					console.warn(`ChangeAttribute module update data do not contain enough values for '${attribute_name}' attribute formatting!`);
+			} else {
+				if (content.indexOf('{}') != -1)
+					console.warn(`ChangeAttribute module update data are not list of values, but value template for '${attribute_name}' attribute has been specified!`);
 			}
 
 			try {

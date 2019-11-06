@@ -1,7 +1,5 @@
 ///<reference path="BaseModule.ts"/>
 module Template.ElementVariables.Modules {
-	import has = Reflect.has;
-
 	/**
 	 * InsertElement update module.
 	 *
@@ -24,8 +22,6 @@ module Template.ElementVariables.Modules {
 
 			// duplicate template and remove it from page
 			this.templateElement = <HTMLElement>template_elements[0].cloneNode(true);
-			if (!this.templateElement.id)
-				return console.error("Elements with 'js-update-element' class are required to have unique identifiers (id='XXX').");
 			this.element.removeChild(template_elements[0]);
 
 			// register defined variables (to ease access)
@@ -65,7 +61,11 @@ module Template.ElementVariables.Modules {
 
 			// clone template with new data and update its ID
 			let element = <HTMLElement>this.templateElement.cloneNode(true);
-			element.id = `${element.id}-${this.templateInstanceId}`;
+			if (element.id)
+				element.id = `${element.id}-${this.templateInstanceId}`;
+			else
+			// TODO: Element could be animated, thats why ID is required, check for animation class?
+				element.id = Utils.Random.GetRandomId();
 
 			// update IDs of underlying variable elements
 			let variable_elements = element.getElementsByClassName("js-insert-var");
